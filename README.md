@@ -55,14 +55,14 @@ Example structure for the ini file above, 2 clients:
 
 Resulting settings.ini for client1:
 ```
-server=192.0.2.6__3__     
+server=192.0.2.63    
 port=143
 file="payroll.dat"
 ```
 
 Resulting settings.ini for client1:
 ```
-  server=192.0.2.6__4__     
+  server=192.0.2.64    
   port=143
   file="payroll2.dat"
 ```
