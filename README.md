@@ -71,7 +71,7 @@ port=143
 file="payroll.dat"
 ```
 
-Resulting settings.ini for client1:
+Resulting settings.ini for client2:
 ```
   server=192.0.2.64    
   port=143
