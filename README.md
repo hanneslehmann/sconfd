@@ -32,33 +32,40 @@ __For the client configuration instances:__
 
 
 Example settings.ini:
-  server=192.0.2.62     
-  port=143
-  file="payroll.dat"
+
+```
+server=192.0.2.62     
+port=143
+file="payroll.dat"
+```
 
 Example structure for the ini file above, 2 clients:
 
-key space | key | value | description
-------------|------|------ |
-template:settings.ini:meta  |   seperator | "=" | any seperator can be used , e.g. ":" as well - mandatory!
-template:settings.ini:content | server  | 192.0.2.62 | content of the ini file
- | port  | 143 | content of the ini file
-| file | "payroll.dat" | content of the ini file
-config:client1:settings.ini:meta  |   filepath | /home/user/myapp/config/settings.ini | target path where config file will be saved - mandatory!
-config:client1:settings.ini:content | server  | 192.0.2.63 | content of the ini file, overwrite default/template value
-config:client2:settings.ini:meta  |   filepath | /home/user/myapp/config/settings.ini | target path where config file
-config:client2:settings.ini:content | server  | 192.0.2.64 | content of the ini file, overwrite default/template value
- | file  | "payroll2.dat" | content of the ini file, overwrite default/template value
+| Key Space     | Key          | Vale   | Description |
+| :------------- | :------------- | :----- | :----------- |
+|  template:settings.ini:meta     |   seperator | "=" | any seperator can be used , e.g. ":" as well - mandatory! |
+|  template:settings.ini:content  | server      | 192.0.2.62 | content of the ini file |
+|     | port  | 143 | content of the ini file |
+|     | file | "payroll.dat" | content of the ini file |
+| config:client1:settings.ini:meta  |   filepath | /home/user/myapp/config/settings.ini | target path where config file will be saved - mandatory! |
+| config:client1:settings.ini:content | server  | 192.0.2.63 | content of the ini file, overwrite default/template value |
+| config:client2:settings.ini:meta  |   filepath | /home/user/myapp/config/settings.ini | target path where config file|
+| config:client2:settings.ini:content | server  | 192.0.2.64 | content of the ini file, overwrite default/template value   |
+|     | file  | "payroll2.dat" | content of the ini file, overwrite default/template value  |
 
 Resulting settings.ini for client1:
-  server=192.0.2.6__3__     
-  port=143
-  file="payroll.dat"
-  
+```
+server=192.0.2.6__3__     
+port=143
+file="payroll.dat"
+```
+
 Resulting settings.ini for client1:
+```
   server=192.0.2.6__4__     
   port=143
-  file="payroll__2__.dat"
+  file="payroll2.dat"
+```
 
 ### Sample use case:
 - Multiple docker containers running instances of a specific application
