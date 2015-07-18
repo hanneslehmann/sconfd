@@ -3,6 +3,8 @@
 Simple Configuration Daemon
 A small tool / script which should help save ini configuration files centrally in a redis database. The files and changes to them (within the database) are monitored from each client (could be a virtual machine, docker container, etc.) and if changes occur the files are respectevly updated within the client.
 
+Same result you may obtain using provisioning tools like puppet and/or chef, but I wanted to create a real lightweight and easy to customize tool.
+
 Usually an application needs a restart to apply changes within config files, this is not in scope of the tool yet.
 
 Usage: __python sconfd.py &lt;client_id&gt;__
@@ -31,7 +33,7 @@ __For the client configuration instances:__
            - content -> keys and their configuration values, if they differ from the template
 
 
-Example settings.ini:
+Given an example configuration file with some fake data -  settings.ini:
 
 ```
 server=192.0.2.62     
@@ -39,7 +41,7 @@ port=143
 file="payroll.dat"
 ```
 
-Example structure for the ini file above, 2 clients:
+Example structure in redis for the ini file if we use 2 clients:
 
 | Key Space     | Key          | Vale   | Description |
 | :------------- | :------------- | :----- | :----------- |
@@ -52,6 +54,15 @@ Example structure for the ini file above, 2 clients:
 | config:client2:settings.ini:meta  |   filepath | /home/user/myapp/config/settings.ini | target path where config file|
 | config:client2:settings.ini:content | server  | 192.0.2.64 | content of the ini file, overwrite default/template value   |
 |     | file  | "payroll2.dat" | content of the ini file, overwrite default/template value  |
+
+
+Screenshots of the structure:
+
+![Sample template](images/sample_template.png)
+
+The instance is overwriting the server IP config:
+
+![Sample template](images/sample_instance.png)
 
 Resulting settings.ini for client1:
 ```
