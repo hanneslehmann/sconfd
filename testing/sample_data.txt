@@ -1,0 +1,13 @@
+select 1
+hmset template:settings.ini:meta seperator =
+hmset template:settings.ini:meta comment ;
+hmset template:settings.ini:content server 192.0.2.62
+hmset template:settings.ini:content port 143
+hmset template:settings.ini:content file payroll.dat
+hmset config:client1:settings.ini:meta filepath /tmp/settings.ini
+hmset config:client1:settings.ini:content server 192.0.2.63
+hmset config:client2:settings.ini:meta filepath /tmp/settings.ini
+hmset config:client2:settings.ini:content server 192.0.2.64
+hmset config:client2:settings.ini:content file payroll2.dat
+config set notify-keyspace-events KEA
+
