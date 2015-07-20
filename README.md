@@ -1,13 +1,19 @@
 ## sconfd version 0.1
 
 Simple Configuration Daemon
+
 A small tool / script which should help save ini configuration files centrally in a redis database. The files and changes to them (within the database) are monitored from each client (could be a virtual machine, docker container, etc.) and if changes occur the files are respectevly updated within the client.
 
 Same result you may obtain using provisioning tools like puppet and/or chef, but I wanted to create a real lightweight and easy to customize tool.
 
 Usually an application needs a restart to apply changes within config files, this is not in scope of the tool yet.
 
-Usage: __python sconfd.py &lt;client_id&gt;__
+Usage (python): __python sconfd.py &lt;client_id&gt;__
+Usage (Go): __go run sconfd.go &lt;client_id&gt;__
+Usage (Binary*): __./sconfd &lt;client_id&gt;__
+
+
+*Binary is compiled on Linux Debian/64 Bit System, and should run standalone
 
 ### Architecture view
 Indeed the architecture is very flexible, I would suggest to have a docker container running redis and the config tools / gui (as soon as they are ready) and sconfd in seperate docker containers which mount a volume for the configuration paths. As there is no security implemented, take care who has access to sconfd (use only in closed networks, e.g. for local developments). As this tool is a Python 2.7 script (Go coming soon), the script is fine to run outside a container if you have Python installed incl. redis module for python.
@@ -87,9 +93,14 @@ Resulting settings.ini for client2:
 
 
 __Example for docker__
+
 In order to connect to the host redis database:
+
 ```alias hostip="ip route show 0.0.0.0/0 | grep -Eo 'via \S+' | awk '{ print \$2 }'"```
-Run Docker with the application image:  docker run --add-host=docker:$(hostip) -v /tmp/:/data -it *image* /bin/bash
+
+Run Docker with the application image:  
+
+```docker run --add-host=docker:$(hostip) -v /tmp/:/data -it *image* /bin/bash```
 
 
 
