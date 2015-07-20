@@ -8,9 +8,9 @@ Same result you may obtain using provisioning tools like puppet and/or chef, but
 
 Usually an application needs a restart to apply changes within config files, this is not in scope of the tool yet.
 
-Usage (python): __python sconfd.py &lt;client_id&gt;__
-Usage (Go): __go run sconfd.go &lt;client_id&gt;__
-Usage (Binary*): __./sconfd &lt;client_id&gt;__
+- Usage (python): __python sconfd.py &lt;client_id&gt;__
+- Usage (Go): __go run sconfd.go &lt;client_id&gt;__
+- Usage (Binary*): __./sconfd &lt;client_id&gt;__
 
 
 *Binary is compiled on Linux Debian/64 Bit System, and should run standalone
