@@ -84,7 +84,7 @@ def main(argv):
         data.update(data_client)
         print "writing change of "+ ck +" to file: " + fp
         f = open(fp, 'w')
-        f.write(com + ' Updated by sconfd at: ' + datetime.now().strftime(FORMAT) + '\n')
+#        f.write(com + ' Updated by sconfd at: ' + datetime.now().strftime(FORMAT) + '\n')
         f.flush()
         dumpdata (data, sep, f)
         f.close

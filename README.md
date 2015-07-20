@@ -86,8 +86,17 @@ Resulting settings.ini for client2:
 - To sum up: make an easy to apply central config management possible, even if applications don't store their condfigurations in databases
 
 
+__Example for docker__
+In order to connect to the host redis database:
+```alias hostip="ip route show 0.0.0.0/0 | grep -Eo 'via \S+' | awk '{ print \$2 }'"```
+Run Docker with the application image:  docker run --add-host=docker:$(hostip) -v /tmp/:/data -it *image* /bin/bash
+
+
+
+
 
 ### Open Topics, for next version
+- Create description and sample docker images for testing
 - Handle parameter / argument list, show usage
 - Handle sections (not supported at the moment, might work with some tweaks)
 - More testing, e.g. if no client content is given...how to handle?
