@@ -10,11 +10,14 @@ Usually an application needs a restart to apply changes within config files, thi
 
 
 - Usage (python): __python sconfd.py &lt;client_id&gt;__
-- Usage (Go): __go run sconfd.go &lt;client_id&gt;__
-- Usage (Binary*): __./sconfd &lt;client_id&gt;__
+- Usage (Go): __go run sconfd.go -id &lt;client_id&gt; [-a &lt;ip:port&gt;]__
+- Usage (Binary*): __./sconfd -id &lt;client_id&gt; [-a &lt;ip:port&gt;] __
 
 
 *Binary is compiled on Linux Debian/64 Bit System, and should run standalone
+
+__Security advise__:
+There is no authentication / authorization at the moment. So make sure, that there is a seperate user created running the daemon and restricht access to needed directories only!
 
 ### Architecture view
 Indeed the architecture is very flexible, I would suggest to have a docker container running redis and the config tools / gui (as soon as they are ready) and sconfd in seperate docker containers which mount a volume for the configuration paths. As there is no security implemented, take care who has access to sconfd (use only in closed networks, e.g. for local developments). As this tool is a Python 2.7 script (Go coming soon), the script is fine to run outside a container if you have Python installed incl. redis module for python.
