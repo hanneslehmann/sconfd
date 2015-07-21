@@ -6,6 +6,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -20,23 +21,29 @@ const (
 )
 
 var (
+	redis_address     string
 	c, r              redis.Conn
 	whatchlist        []string
 	template_settings map[string]string
 	config_settings   map[string]string
 )
 
+var Usage = func() {
+	fmt.Fprintf(os.Stderr, "\n")
+	fmt.Fprintf(os.Stderr, "Usage of sconfd:\n")
+	flag.PrintDefaults()
+	fmt.Fprintf(os.Stderr, "\n")
+}
+
 // Connect to Redis
-func init() {
+func init_redis(url string) redis.Conn {
 	var err error
-	c, err = redis.Dial("tcp", ":6379")
+	var c redis.Conn
+	c, err = redis.Dial("tcp", url)
 	if err != nil {
 		log.Fatalf("Couldn't connect to Redis: %v\n", err)
 	}
-	r, err = redis.Dial("tcp", ":6379")
-	if err != nil {
-		log.Fatalf("Couldn't connect to Redis: %v\n", err)
-	}
+	return c
 }
 
 func contains(slice []string, item string) bool {
@@ -54,30 +61,27 @@ func check(e error) {
 	}
 }
 
-func hget(c redis.Conn, query string) string {
-	ret, err := c.Do(query)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	return fmt.Sprint(ret)
-}
-
 func main() {
-	defer c.Close()
-	defer r.Close()
 	prefix := "template:"
-	//content := "content"
 	config := "config"
+
+	var clientID string
+	flag.StringVar(&clientID, "id", "", "the unique Client ID for identification (mandatory)")
+	flag.StringVar(&redis_address, "a", ADDRESS, "the URL with format IP:PORT for connecting database (optional)")
+	flag.Parse()
+
+	c := init_redis(redis_address)
+	defer c.Close()
+	r := init_redis(redis_address)
+	defer r.Close()
 
 	c.Do("SELECT", 1)
 	r.Do("SELECT", 1)
 
-	argsWithoutProg := os.Args[1:]
-
-	if len(argsWithoutProg) == 1 {
-		config = fmt.Sprint("config:", os.Args[1], ":")
-		fmt.Printf("Looking for changes of config: %s and ", os.Args[1])
+	if len(clientID) > 1 {
+		fmt.Printf("Connected to: tcp://%s \n", redis_address)
+		config = fmt.Sprint("config:", clientID, ":")
+		fmt.Printf("Looking for changes of config:%s and ", clientID)
 		strs, err := redis.Strings(c.Do("KEYS", fmt.Sprint(config, "*")))
 		whatchlist := []string{config}
 		if err != nil {
@@ -101,49 +105,31 @@ func main() {
 					ck := fmt.Sprint(params[0], ":", params[1], ":")
 					if contains(whatchlist, ck) {
 						key_index := 0
-						if params[0] == "config" {
-							key_index = 2
-						}
-						if params[0] == "template" {
+						switch params[0] {
+						case "template":
 							key_index = 1
+						case "config":
+							key_index = 2
 						}
 						if key_index > 0 {
 							key_c := fmt.Sprint(config, params[key_index], ":content")
 							key_m := fmt.Sprint(config, params[key_index], ":meta")
 							key_tc := fmt.Sprint(prefix, params[key_index], ":content")
 							key_tm := fmt.Sprint(prefix, params[key_index], ":meta")
-							//sep := hget(c, fmt.Sprint("HGET",key_t, ":meta seperator"))
 							com, err := redis.String(c.Do("HGET", key_tm, "comment"))
-							if err != nil {
-								fmt.Println(err)
-								os.Exit(1)
-							}
+							check(err)
 							sep, err := redis.String(c.Do("HGET", key_tm, "seperator"))
-							if err != nil {
-								fmt.Println(err)
-								os.Exit(1)
-							}
+							check(err)
 							fp, err := redis.String(c.Do("HGET", key_m, "filepath"))
-							if err != nil {
-								fmt.Println(err)
-								os.Exit(1)
-							}
+							check(err)
 							template_settings, err := redis.StringMap(c.Do("HGETALL", key_tc))
-							if err != nil {
-								fmt.Println(err)
-								os.Exit(1)
-							}
+							check(err)
 							config_settings, err := redis.StringMap(c.Do("HGETALL", key_c))
-							if err != nil {
-								fmt.Println(err)
-								os.Exit(1)
-							}
+							check(err)
 							for key, value := range config_settings {
 								_, ok := template_settings[key]
 								if ok {
 									template_settings[key] = value
-								} else {
-									// fmt.Printf("key not found %s \n", key)
 								}
 							}
 							f, err := os.Create(fp)
@@ -166,6 +152,8 @@ func main() {
 			}
 		}
 
+	} else {
+		Usage()
 	}
 
 }
