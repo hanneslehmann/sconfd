@@ -11,7 +11,7 @@ Usually an application needs a restart to apply changes within config files, thi
 
 - Usage (python): __python sconfd.py &lt;client_id&gt;__
 - Usage (Go): __go run sconfd.go -id &lt;client_id&gt; [-a &lt;ip:port&gt;]__
-- Usage (Binary*): __./sconfd -id &lt;client_id&gt; [-a &lt;ip:port&gt;] __
+- Usage (Binary*): __./sconfd -id &lt;client_id&gt; [-a &lt;ip:port&gt;]__
 
 
 *Binary is compiled on Linux Debian/64 Bit System, and should run standalone
